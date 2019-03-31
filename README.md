@@ -26,7 +26,7 @@ ACCESS_KEY: <MAPBOX API KEY>
 * This will create a new virtualbox and install all the necessary dependencies
 on it. The project's data will be downloaded and the database configured.
 * ssh into the vm by running `vagrant ssh`
-* In the vm, run `cd /vagrant/MTA2014/MTA/django_app/mta`
+* In the vm, run `cd /vagrant/MTA/django_app/mta`
 * Then launch the django server by running `python3 manage.py runserver 0.0.0.0:8000`
 * Finally, in the host machine, type `http://localhost:8001/mta2014/map_mta` in your browser.
 
