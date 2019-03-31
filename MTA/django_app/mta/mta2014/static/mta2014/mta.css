@@ -1,0 +1,114 @@
+/* Note that use of MTA logos, maps and symbols requires a license. For licensing information, contact Mark Heavey at mheavey@mtahq.org. */ 
+/* Hex codes below compiled from http://mta.info/developers/data/colors.csv */
+.mta-bullet {
+	font-family: Helvetica, sans-serif;
+	width:  1.3em;
+	height: 1.3em;
+	font-size: 1em;
+	line-height: 1em;
+	padding: 0.25em;
+	text-align: center;
+	font-weight: bold;
+	color: #FFF;
+	-webkit-border-radius: 999px;
+	-moz-border-radius: 999px;
+	border-radius: 999px;
+	behavior: url(css/PIE.htc); // For IE. See http://css3pie.com/
+} 
+span.mta-bullet { display: inline-block; }
+
+.mta-bullet-x {
+	font-family: Helvetica, sans-serif;
+	width: 1.3em;
+    height: 1.3em;
+	font-size: 1em;
+	line-height: 1em;
+	text-align: center;
+	font-weight: bold;
+	color: #FFF;
+/* Rotate */
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+/* Rotate Origin 
+    -webkit-transform-origin: 0 100%;
+    -moz-transform-origin: 0 100%;
+    -ms-transform-origin: 0 100%;
+    -o-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+    padding: 0.25em;*/
+}
+span.mta-bullet-x { display: inline-block; }
+
+
+.mta-a, .mta-c, .mta-e, .mta-ace { background-color: #2850AD; }
+.leaflet-interactive.mta-a, .leaflet-interactive.mta-c, .leaflet-interactive.mta-e, .leaflet-interactive.mta-ace { background-color: #2850AD; stroke: #2850AD;}
+
+.mta-b, .mta-d, .mta-f, .mta-m, .mta-bdfm { background-color: #FF6319; }
+.leaflet-interactive.mta-b, .leaflet-interactive.mta-d, .leaflet-interactive.mta-f, .leaflet-interactive.mta-m, .leaflet-interactive.mta-bdfm {background-color: #FF6319; stroke: #FF6319;}
+
+.mta-g { background-color: #6CBE45; }
+.leaflet-interactive.mta-g { background-color: #6CBE45; stroke: #6CBE45;}
+
+.mta-j, .mta-z, .mta-jz { background-color: #996633; }
+.leaflet-interactive.mta-j, .leaflet-interactive.mta-z, .leaflet-interactive.mta-jz { background-color: #996633; stroke #996633;}
+
+.mta-l { background-color: #A7A9AC; }
+.leaflet-interactive.mta-l { background-color: #A7A9AC; stroke: #A7A9AC;}
+
+.mta-n, .mta-q, .mta-r, .mta-nqr { background-color: #FCCC0A; color: #333; }
+.leaflet-interactive.mta-n, .leaflet-interactive.mta-q, .leaflet-interactive.mta-r, .leaflet-interactive.mta-nqr { background-color: #FCCC0A; stroke: #FCCC0A; color: #333; }
+
+.mta-s { background-color: #808183; }
+.leaflet-interactive.mta-s { background-color: #808183; stroke: #808183;}
+
+.mta-1, .mta-2, .mta-3, .mta-123 { background-color: #EE352E; }
+.leaflet-interactive.mta-1, .leaflet-interactive.mta-2, .leaflet-interactive.mta-3, .leaflet-interactive.mta-123 { background-color: #EE352E; stroke: #EE352E; }
+
+.mta-4, .mta-5, .mta-6, .mta-456 { background-color: #00933C; }
+.leaflet-interactive.mta-4, .leaflet-interactive.mta-5, .leaflet-interactive.mta-6, .leaflet-interactive.mta-456 { background-color: #00933C; stroke: #00933C;}
+
+.mta-7 { background-color: #B933AD; }
+.leaflet-interactive.mta-7 { background-color: #B933AD; stroke: #B933AD;}
+
+.mta-6x {
+	background-color: #00933C; 
+}
+.leaflet-interactive.mta-6x {
+	background-color: #00933C; stroke: #00933C;
+}
+
+.mta-text-6x {
+	display: inline-block;
+	background-color: #00933C; 
+	text-align: center;
+/* Rotate */
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.leaflet-interactive.mta-text-6x {
+	background-color: #00933C; stroke: #00933C;
+}
+
+.lirr-babylon  { background-color: #00985F; }
+.lirr-city-terminal { background-color: #4D5357; }
+.lirr-far-rockaway  { background-color: #6E3219; }
+.lirr-hempstead  { background-color: #CE8E00; }
+.lirr-long-beach  { background-color: #FF6319; }
+.lirr-montauk  { background-color: #6983; }
+.lirr-oyster-bay  { background-color: #00AF3F; }
+.lirr-port-jefferson  { background-color: #0039A6; }
+.lirr-port-washington  { background-color: #C60C30; }
+.lirr-ronkonkoma  { background-color: #A626AA; }
+.lirr-west-hempstead  { background-color: #00A1DE; }
+.metro-north-harlem  { background-color: #0039A6; }
+.metro-north-hudson  { background-color: #009B3A; }
+.metro-north-new-haven  { background-color: #E00034; }
+.metro-north-pascack-valley  { background-color: #923D97; }
+.metro-north-port-jervis  { background-color: #FF7900; }
+.mta-ez-pass { background-color: #6E267B; }

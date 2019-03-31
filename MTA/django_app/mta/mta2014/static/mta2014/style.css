@@ -1,0 +1,64 @@
+#boros { height:100%;
+}
+            css: {
+                position: "absolute",
+                bottom: "85px",
+                left: "50px",
+                zIndex: 1002,
+                backgroundColor: "white",
+                padding: "8px",
+                border: "1px solid #ccc"
+            }
+.fixed-wrapper { 
+		position: relative;
+}
+/*.fixed { 
+		position: absolute;
+}*/
+#stop-data-collection-list {
+		overflow-y: scroll;
+		height: 200px;
+}
+#stop-data  td {
+		font-size: 0.6em;
+}
+.fixed  th {
+		font-size: 0.7em;
+}
+.collection-item {
+		top: 100px;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		padding-left: 10px;
+		padding-right: 20px;
+		
+}
+.label-stop-info {
+		color: blue;
+		padding-top: 8px;
+		padding-bottom: 8px;
+}
+.stop-info {
+		padding-top: 8px;
+		padding-bottom: 8px;
+}
+.leaflet-popup-content::before {
+		margin-top: 5px;
+		margin-bottom: 5px;
+		margin-left: 8px;
+		margin-right: 8px;
+}
+.leaflet-popup-scrolled {
+		margin-top: 5px;
+		margin-bottom: 5px;
+		margin-left: 8px;
+		margin-right: 8px;
+}
+#modal-popup {
+		display: block;
+}
+#north-direction, #south-direction {
+		display: block;
+		overflow-y: scroll;
+		height: 400px;
+}
