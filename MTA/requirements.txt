@@ -1,4 +1,4 @@
-requests==2.18.4
+requests
 Django==2.1.7
 protobuf==3.7.0
 pandas==0.24.1
