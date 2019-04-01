@@ -26,11 +26,6 @@ Vagrant.configure(2) do |config|
   # config.vm.network "public_network"
 
   config.vm.provision "shell", inline: <<-SHELL
-
-		# TODO(isroelkogan) figure out way to automate insertion
-		# of django secret key and api key, defined in
-		# ./MTA/django_app/mta/settings.ini
-
 		# setup linux requirements
   	bash /vagrant/MTA/setup/linux-env-setup.sh
 		# setup python requirements
