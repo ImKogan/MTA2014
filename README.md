@@ -34,9 +34,9 @@ on it. The project's data will be downloaded and the database configured.
 
 The [MTA Real-Time Data Feeds](http://datamine.mta.info/) provides
 GTFS structured data of live train traffic. This data feed is used universally:
-on the MTA website, station platforms, and is injested by Google Maps. In this
+on the MTA website, station platforms, and is ingested by Google Maps. In this
 initial version of the application, we use historical data from 2014 stored in
-an AWS-S3 bucket instead of recent data. [MTA Historical GTFS-realtime data](http://web.mta.info/developers/MTA-Subway-Time-historical-data.html)
+an AWS-S3 bucket instead of recent data. [MTA Historical GTFS-realtime data](http://web.mta.info/developers/MTA-Subway-Time-historical-data.html).
 This data runs from September-December 2014 for the subway lines 1,2,3,4,5,6,S,L, and is the data used for the current stage of this project.
 
 GTFS (General Transit Feed Specification) is an open data format for public transportation. 
@@ -56,10 +56,10 @@ The Django app depends on the train information to be stored in the database.
 The ingestion of the GTFS data is done by our python script `gtfs_to_csv.py`
 using standard protobuf libraries and Pandas.
 
-The frontend depends on the popular location platform provided by [Mapbox](https://mapbox.com).
+The front-end depends on the popular location platform provided by [Mapbox](https://mapbox.com).
 The app's features on the map are rendered by [LefletJS](https://leafletjs.com/), a mature library based on D3.js.
 
-The frontend framework is [Materialize](https://materializecss.com/).
+The front-end framework is [Materialize](https://materializecss.com/).
 
 ## Current state and further development
 * Currently, the application is static, as it ingests the MTA's historical data. The goal is to use this stage of the project as a testing environment for processing and serving the MTA's current subway data.
