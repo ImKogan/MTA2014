@@ -12,7 +12,7 @@ up for Mapbox, and getting an API key.
 * [Mapbox](https://mapbox.com)
 * [Create](https://docs.mapbox.com/help/how-mapbox-works/access-tokens/#creating-and-managing-access-tokens) a Mapbox API key.
 * Install [Vagrant and Virtualbox](https://www.vagrantup.com/intro/getting-started/) (`sudo apt-get install virtualbox` `sudo apt-get install vagrant`)
-* After cloning the reop, edit the settings.ini file found in
+* After cloning the repo, edit the settings.ini file found in
 `MTA2014/MTA/django_app/mta/settings.ini` by updating the ACCESS_KEY value.
 ```
 [database]
