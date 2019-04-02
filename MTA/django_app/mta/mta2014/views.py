@@ -47,7 +47,7 @@ class MapMTAView(View):
             'geojson', shapes, geometry_field='geom',
             fields=('shape_id', 'route_name')))
 
-        routes = RouteInfo.objects.all()
+        routes = RouteInfo.objects.exclude(trip__isnull=True)
         route_names = [route['route_short_name'] for route in routes.values()]
         stops = Stops.objects.filter(location_type=1)
         stops_json = json.loads(serialize(

@@ -9,7 +9,7 @@ $(document).ready(function(){
 				'<option value="'+val+'"><a href="#!">'+i+'AM</a></option>'
 			);
 		}
-		element.append('<option value="0"><a href="#!">12 PM</a></option>');
+		element.append('<option value="12"><a href="#!">12 PM</a></option>');
 		for (var i=1; i<12; i++) {
 			var j = i+12;
 			var val = j.toString();
@@ -340,18 +340,18 @@ $(document).ready(function(){
 					mymap.removeLayer(geojsonLayerShapes);
 				}
 				errorModal(response);
-				var modalTrigger = '<a class="waves-effect waves-light btn modal-trigger" id="modal-stop-info-trigger" href="#modal-stop-info"></a>'
+				var modalTrigger = '<a class="modal-trigger" id="modal-stop-info-trigger" href="#modal-stop-info">click for stop schedule</a>'
 				var geojsonFeatureStops = response.stops_json;
 				geojsonLayerStops = L.geoJson(geojsonFeatureStops, {
 					pointToLayer: function (feature, latlng) {
 						stopTimes(feature);
 						return L.circleMarker(latlng, {
-							radius: 5
+							radius: 8
 						});
 					}
-				}).bindPopup(modalTrigger);
-				$('#modal-stop-info').modal();
-				geojsonLayerStops.addTo(mymap);
+				}).bindPopup(modalTrigger)
+				geojsonLayerStops.addTo(mymap).openPopup();
+				$('#modal-stop-info').modal('open');
 				console.log(Date($date));
 			}
 		});
