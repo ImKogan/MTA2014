@@ -1,4 +1,4 @@
-#boros { height:100%;
+#boros { height: -webkit-calc(100% - 64px);
 }
             css: {
                 position: "absolute",
@@ -61,4 +61,10 @@
 		display: block;
 		overflow-y: scroll;
 		height: 400px;
+}
+#header-table {
+		font-size: 1.5em;
+}
+.app-container {
+		margin-bottom: 0px;
 }

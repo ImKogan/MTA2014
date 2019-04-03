@@ -78,7 +78,8 @@ $(document).ready(function(){
 	L.Map.addInitHook(function () {
 		mapsPlaceholder.push($("#boros"));
 	});
-	var mymap = L.map("boros").setView([40.75, -73.95], 11);
+	var mymap = L.map("boros" ,{ zoomControl: false }).setView(
+		[40.75, -73.95], 11);
 	mymap.setMaxBounds([[40.5, -73.6], [41.0, -74.3]]);
 	mymap.setMinZoom(10);
 	mymap.setMaxZoom(15);
@@ -88,6 +89,8 @@ $(document).ready(function(){
    		id: 'mapbox.streets',
     	accessToken: accessKey.mapbox
 	}).addTo(mymap);
+
+	new L.Control.Zoom({ position: 'bottomleft' }).addTo(mymap);
 
 	var polygons_list = window.poly_list;
 	for (var i=0; i < polygons_list.length; i++){
