@@ -68,3 +68,12 @@
 .app-container {
 		margin-bottom: 0px;
 }
+.navbar-fixed {
+        margin-bottom: 0px;
+}
+#modal-stop-info {
+        overflow-y:visible;
+}
+#header-table-wrapper {
+        margin-bottom: 0px;
+}

@@ -1,4 +1,15 @@
 $(document).ready(function(){
+	L.Control.SideNav = L.Control.extend ({
+		onAdd: function(map) {
+			var $this = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-sidenav');
+			$($this).append($('#sidenav-trigger'));
+			return $this;
+		},
+		onRemove: function(map) {
+			L.DomEvent.off('.leaflet-control.sidenav');
+		}
+	});
+
 	var accessKey = window.accessKey;
 	function hourOptions(element) {
 		element.append('<option value="" disabled selected>Hour</option>');
@@ -91,6 +102,7 @@ $(document).ready(function(){
 	}).addTo(mymap);
 
 	new L.Control.Zoom({ position: 'bottomleft' }).addTo(mymap);
+	new L.Control.SideNav({ position: 'topleft' }).addTo(mymap);
 
 	var polygons_list = window.poly_list;
 	for (var i=0; i < polygons_list.length; i++){
@@ -225,11 +237,6 @@ $(document).ready(function(){
 			'<th class="label-stop-info">Stop ID: </th>'+
 			'<th class="stop-info">'+feature.properties.stop_id+'</th>'+
 			'</tr>'
-		);
-		modalTable.append(
-			'<a href="#!" class ="collection-item">'+
-			'<table class="striped" id="stop-data">'+
-			'<tbody>'
 		);
 
 		var trips = feature.properties.trips;
