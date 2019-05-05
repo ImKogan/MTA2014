@@ -12,8 +12,11 @@ up for Mapbox, and getting an API key.
 * [Mapbox](https://mapbox.com)
 * [Create](https://docs.mapbox.com/help/how-mapbox-works/access-tokens/#creating-and-managing-access-tokens) a Mapbox API key.
 * Install [Vagrant and Virtualbox](https://www.vagrantup.com/intro/getting-started/) (`sudo apt-get install virtualbox` `sudo apt-get install vagrant`)
-* After cloning the repo, edit the settings.ini file found in
-`MTA2014/MTA/django_app/mta/settings.ini` by updating the ACCESS_KEY value.
+* After cloning the repo, cd into  
+`MTA2014/MTA/django_app/mta`  
+and copy `settings.ini.tmpl` to `settings.ini`  
+`cp settings.ini.tmpl settings.ini`  
+edit the new `settings.ini` file by updating the ACCESS_KEY value.
 ```
 [database]
 ..........
@@ -22,6 +25,8 @@ up for Mapbox, and getting an API key.
 SECRET_KEY: <Django SECRET KEY>
 ACCESS_KEY: <MAPBOX API KEY>
 ```
+and update you local database credentials from defaults if desired.
+
 * cd into the repo root folder MTA2014/ and run `vagrant up`.
 * This will create a new virtualbox and install all the necessary dependencies
 on it. The project's data will be downloaded and the database configured.
