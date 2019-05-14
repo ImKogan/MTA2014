@@ -27,12 +27,14 @@ def run(args):
     sql = os.path.join(BASE, 'mta2014', 'sql', 'route_info.sql')
     with open(sql) as f:
         SQL = f.read()
-    print(os.getcwd())
-    print(path)
+    
     conn = psycopg2.connect(
         "host={HOST} port={PORT} dbname={NAME} user={USER} password={PASSWORD}".format(**DATABASE))
     cur = conn.cursor()
-    cur.execute(SQL.format('mta2014_routeinfo', path))
+    my_file = open(path)
+    cur.copy_expert(
+        sql=SQL.format('mta2014_routeinfo'),
+        file=my_file)
     conn.commit()
     cur.close()
 
