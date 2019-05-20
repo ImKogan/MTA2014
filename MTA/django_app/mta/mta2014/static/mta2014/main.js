@@ -269,6 +269,55 @@ $(document).ready(function(){
 			);
 	}
 
+    function check_route_input($route, $direction, $date, $hour) {
+        message = {}
+        string_array = []
+        if ($route == ''){
+            string_array.push('Please choose a Route')
+        }
+        if ($direction == null){
+            string_array.push('Please choose a Direction')
+        }
+        if ($date == ''){
+            string_array.push('Please choose a Date')
+        }
+        if ($hour == null){
+            string_array.push('Please choose a Hour')
+        }
+        if (string_array.length > 0) {
+            message['message'] = string_array.join("<br>")
+            errorModal(message)
+        }
+
+        if (Object.keys(message).length === 0){
+            return true
+        }
+        return false
+	}
+
+    function check_stop_input($stop, $date, $hour) {
+        message = {}
+        string_array = []
+        if ($stop == ''){
+            string_array.push('Please choose a Route')
+        }
+        if ($date == ''){
+            string_array.push('Please choose a Date')
+        }
+        if ($hour == null){
+            string_array.push('Please choose a Hour')
+        }
+        if (string_array.length > 0) {
+            message['message'] = string_array.join("<br>")
+            errorModal(message)
+        }
+
+        if (Object.keys(message).length === 0){
+            return true
+        }
+        return false
+    }
+
 	$("#submit_route_search").click(function () {
 		console.log(mymap);
 		var $route = $("#select_route option:selected").val();
@@ -279,6 +328,10 @@ $(document).ready(function(){
 		console.log($date);
 		var $hour = $("#select-hour-route").val();				
 		console.log($hour);
+
+        if (check_route_input($route, $direction, $date, $hour) == false){
+            return
+        }
 
 		$.ajax({
 			url: 'route_stops',
@@ -320,6 +373,7 @@ $(document).ready(function(){
 					}
 				});
 				geojsonLayerStops.addTo(mymap);
+				$(".sidenav").sidenav('close');
 				console.log(Date($date));
 			}
 		});
@@ -327,9 +381,15 @@ $(document).ready(function(){
 			
 	$("#submit_stop_search").click(function () {
 		var $stop = $("#stop-name-input").val();
+		console.log($stop);
 		var $date = $("#stop-datepicker").val();
 		console.log($date);
 		var $hour = $("#select-hour-stop").val();				
+		console.log($hour);
+
+        if (check_stop_input($stop, $date, $hour) == false){
+            return
+        }
 
 		$.ajax({
 			url: 'stop_times',
@@ -361,6 +421,7 @@ $(document).ready(function(){
 					}
 				}).bindPopup(modalTrigger)
 				geojsonLayerStops.addTo(mymap).openPopup();
+				$(".sidenav").sidenav('close');
 				$('#modal-stop-info').modal('open');
 				console.log(Date($date));
 			}
