@@ -10,3 +10,5 @@ data/*
 !data/.gitkeep
 proto
 settings.ini
+migrations/*
+!migrations/__init__.py
