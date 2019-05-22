@@ -30,6 +30,7 @@ and update you local database credentials from defaults if desired.
 * cd into the repo root folder MTA2014/ and run `vagrant up`.
 * This will create a new virtualbox and install all the necessary dependencies
 on it. The project's data will be downloaded and the database configured.
+* Note: In the previous step - the default is to download only 2 days worth of data in order to expedite configuration time. To change the default and to download all available (historical mta 2014 data), BEFORE running the `vagrant up` command, edit the Vagrantfile in line 5 by changing the `data_size` variable from "short" to "full".
 * ssh into the vm by running `vagrant ssh`
 * In the vm, run `cd /vagrant/MTA/django_app/mta`
 * Then launch the django server by running `python3 manage.py runserver 0.0.0.0:8000`
