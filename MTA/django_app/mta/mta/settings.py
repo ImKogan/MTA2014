@@ -27,9 +27,9 @@ config.read(os.path.join(BASE_DIR, 'settings.ini'))
 SECRET_KEY = config.get('secrets', 'SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'mta2014.appspot.com']
 
 
 # Application definition
@@ -80,17 +80,42 @@ WSGI_APPLICATION = 'mta.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'HOST': config.get('database', 'DATABASE_HOST'),
-        'PORT': config.get('database', 'DATABASE_PORT'),
-        'NAME': config.get('database', 'DATABASE_NAME'),
-        'USER': config.get('database', 'DATABASE_USER'),
-        'PASSWORD': config.get('database', 'DATABASE_PASSWORD'),
-    }
-}
+# [START db_setup]
+if os.getenv('GAE_INSTANCE', None):
+    # Running on production App Engine, so connect to Google Cloud SQL using
+    # the unix socket at /cloudsql/<your-cloudsql-connection
+    db_config = RawConfigParser()
+    db_config.read(os.path.join(BASE_DIR, 'db-settings.ini.app'))
 
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'HOST': db_config.get('database', 'DATABASE_HOST'),
+            'PORT': db_config.get('database', 'DATABASE_PORT'),
+            'NAME': db_config.get('database', 'DATABASE_NAME'),
+            'USER': db_config.get('database', 'DATABASE_USER'),
+            'PASSWORD': db_config.get('database', 'DATABASE_PASSWORD'),
+        }
+    }
+else:
+    # Running locally so connect to either a local Postgres instance or connect
+    # to Cloud SQL via the proxy.  To start the proxy via command line:
+    # $ cloud_sql_proxy -instances=[INSTANCE_CONNECTION_NAME]=tcp:3306
+    # See https://cloud.google.com/sql/docs/mysql-connect-proxy
+    db_config = RawConfigParser()
+    db_config.read(os.path.join(BASE_DIR, 'db-settings.ini'))
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'HOST': db_config.get('database', 'DATABASE_HOST'),
+            'PORT': db_config.get('database', 'DATABASE_PORT'),
+            'NAME': db_config.get('database', 'DATABASE_NAME'),
+            'USER': db_config.get('database', 'DATABASE_USER'),
+            'PASSWORD': db_config.get('database', 'DATABASE_PASSWORD'),
+        }
+    }
+# [END db_setup]
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -128,11 +153,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'https://storage.googleapis.com/mta2014/static/'
+
+STATIC_ROOT = 'static'
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
+STATICFILES_DIRS =[
+    os.path.join(BASE_DIR, 'static'),
 ]
 
 DAJAXICE_MEDIA_PREFIX = 'dajaxice'

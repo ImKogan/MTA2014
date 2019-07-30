@@ -9,6 +9,6 @@ __pycache__
 data/*
 !data/.gitkeep
 proto
-settings.ini
+*settings.ini*
 migrations/*
 !migrations/__init__.py
