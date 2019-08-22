@@ -16,7 +16,7 @@ def run(args):
     path = args['path']
     BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     config = RawConfigParser()
-    config.read(os.path.join(BASE, 'settings.ini'))
+    config.read(os.path.join(BASE, 'db-settings.ini'))
     DATABASE = {'HOST': config.get('database', 'DATABASE_HOST'),
                 'PORT': config.get('database', 'DATABASE_PORT'),
                 'NAME': config.get('database', 'DATABASE_NAME'),

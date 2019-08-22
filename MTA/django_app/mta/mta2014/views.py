@@ -84,7 +84,7 @@ class RouteStopsView(View):
                 (Q(arrival__lte=end_stamp) | Q(departure__lte=end_stamp)) &
                 (Q(arrival__gte=start_stamp) | Q(departure__gte=start_stamp)),
                 header_timestamp__timestamp__gte=start_stamp-300,
-                header_timestamp__timestamp__lte=end_stamp,
+                header_timestamp__timestamp__lte=end_stamp+300,
                 route__route_id=route,
                 d=direction).order_by('stop__stop_id', 'arrival', 'departure')
         trips_values = trips.values(
@@ -152,7 +152,7 @@ class StopTimesView(View):
                 (Q(arrival__lte=end_stamp) | Q(departure__lte=end_stamp)) &
                 (Q(arrival__gte=start_stamp) | Q(departure__gte=start_stamp)),
                 header_timestamp__timestamp__gte=start_stamp-300,
-                header_timestamp__timestamp__lte=end_stamp).order_by(
+                header_timestamp__timestamp__lte=end_stamp+300).order_by(
                     'arrival', 'departure')
 
         if len(trips.values()) == 0:
