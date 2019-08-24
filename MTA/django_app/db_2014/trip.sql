@@ -5,7 +5,7 @@ WITH temp AS (
 		(temp.start_date, temp.trip, temp.stop) *
 		FROM temp
 		ORDER BY temp.start_date, temp.trip, temp.stop, temp.stop_number,
-		temp.header_timestamp DESC
+		temp.arrival DESC, temp.departure DESC, temp.header_timestamp
 )
 , staging AS (
 		SELECT t.id AS timestamp_id, temp.{header_timestamp_id},
