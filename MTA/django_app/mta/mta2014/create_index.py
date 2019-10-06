@@ -22,7 +22,7 @@ sql = os.path.join(BASE, 'mta2014', 'sql', 'create_index.sql')
 with open(sql) as f:
     SQL = f.read()
 
-settings = path['settings']
+settings = os.path.join(BASE, args.settings)
 DATABASE = db_connection(settings)
 conn = psycopg2.connect(
     "host={HOST} port={PORT} dbname={NAME} user={USER} password={PASSWORD}".format(**DATABASE))
