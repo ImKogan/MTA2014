@@ -32,7 +32,7 @@ class Trip(models.Model):
     created = models.DateTimeField(default=timezone.now)
 
 class Timestamp(models.Model):
-    '''parent table for trip storing timestamps (of trip updates)
+    '''parent table for trip storing timestamps (of trip and vehicle updates)
     '''
     timestamp = models.IntegerField()
 
@@ -125,3 +125,23 @@ shapes_mapping = {
     'route_name': 'route_name',
     'geom': 'LINESTRING',
 }
+
+class Vehicle(models.Model):
+    '''main table for vehicle updates
+    '''
+    current_status = models.ForeignKey('Status', on_delete=models.CASCADE, null=True)
+    current_stop_sequence = models.IntegerField()
+    header_timestamp = models.ForeignKey('Timestamp', on_delete=models.CASCADE)
+    updateid = models.IntegerField()
+    route = models.ForeignKey('RouteInfo', on_delete=models.CASCADE, null=True)
+    start_date = models.ForeignKey('Date', on_delete=models.CASCADE)
+    stop = models.ForeignKey('Stops', on_delete=models.CASCADE, null=True)
+    timestamp = models.FloatField(null=True)
+    trip = models.ForeignKey('TripName', on_delete=models.CASCADE)
+    created = models.DateTimeField(default=timezone.now)
+
+class Status(models.Model):
+    '''parent table for vehicle storing status
+    '''
+    status = models.CharField(max_length=64)
+

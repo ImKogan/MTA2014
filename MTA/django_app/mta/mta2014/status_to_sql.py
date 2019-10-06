@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 '''
-routes_to_sql.py
+status_to_sql.py
 
-upload static routes csv to routeinfo table in db
+upload static routes csv to status table in db
 '''
 
 import os
@@ -16,10 +16,10 @@ def run(args):
     '''run upload to db
     '''
     BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    sql = os.path.join(BASE, 'mta2014', 'sql', 'route_info.sql')
+    sql = os.path.join(BASE, 'mta2014', 'sql', 'status.sql')
     with open(sql) as f:
         SQL = f.read()
-    settings = path['settings']
+    settings = args['settings']
     DATABASE = db_connection(settings)
     conn = psycopg2.connect(
         "host={HOST} port={PORT} dbname={NAME} user={USER} password={PASSWORD}".format(**DATABASE))
@@ -27,7 +27,7 @@ def run(args):
     path = args['path']
     my_file = open(path)
     cur.copy_expert(
-        sql=SQL.format('mta2014_routeinfo'),
+        sql=SQL.format('mta2014_status'),
         file=my_file)
     conn.commit()
     cur.close()

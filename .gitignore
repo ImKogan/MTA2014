@@ -12,3 +12,7 @@ proto
 *settings.ini*
 migrations/*
 !migrations/__init__.py
+
+# Backup files
+*1.py
+*1.html

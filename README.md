@@ -63,7 +63,7 @@ The ingestion of the GTFS data is done by our python script `gtfs_to_csv.py`
 using standard protobuf libraries and Pandas.
 
 The front-end depends on the popular location platform provided by [Mapbox](https://mapbox.com).
-The app's features on the map are rendered by [LefletJS](https://leafletjs.com/), a mature library based on D3.js.
+The app's features on the map are rendered by [LeafletJS](https://leafletjs.com/), a mature library based on D3.js.
 
 The front-end framework is [Materialize](https://materializecss.com/).
 
