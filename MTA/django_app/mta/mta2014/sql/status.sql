@@ -1,0 +1,1 @@
+COPY {} (status) FROM STDIN WITH CSV HEADER

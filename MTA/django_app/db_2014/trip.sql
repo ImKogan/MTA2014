@@ -4,7 +4,10 @@ WITH temp AS (
 		SELECT DISTINCT ON
 		(temp.start_date, temp.trip, temp.stop) *
 		FROM temp
-		ORDER BY temp.start_date, temp.trip, temp.stop, temp.stop_number
+		WHERE temp.header_timestamp <= temp.arrival
+		OR temp.header_timestamp <= temp.departure
+		ORDER BY temp.start_date, temp.trip, temp.stop, temp.stop_number,
+		temp.header_timestamp DESC
 )
 , staging AS (
 		SELECT t.id AS timestamp_id, temp.{header_timestamp_id},

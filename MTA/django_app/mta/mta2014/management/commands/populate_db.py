@@ -30,5 +30,8 @@ class Command(BaseCommand):
         if module == 'load_shapes':
             from ... import load_shapes
             load_shapes.run(kwargs)
+        if module == 'status_to_sql':
+            from ... import status_to_sql
+            status_to_sql.run(kwargs)
         print('Database updated succesfully'.center(50, '-'))
 

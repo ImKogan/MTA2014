@@ -59,7 +59,7 @@ def gtfs_to_df(gtfs_files, dataframes_dir, target_dir):
                            'currentStopSequence':'current_stop_sequence',
                            'routeId':'route_id',
                            'startDate':'start_date',
-                           'id':'id'}
+                           'id':'updateid'}
 
     trip_update_df.rename(columns=trip_col_mapping, inplace=True)
     vehicle_df.rename(columns=vehicle_col_mapping, inplace=True)
@@ -76,6 +76,7 @@ def gtfs_to_df(gtfs_files, dataframes_dir, target_dir):
         os.mkdir(os.path.join(dataframes_dir, target_dir))
     file_dir = dataframes_dir + '/' + target_dir
 
+    vehicle_df.drop(vehicle_df[vehicle_df['timestamp'].isna()].index, inplace=True)
     trip_update_df.to_csv(os.path.join(file_dir, 'trip_update.csv'), index=False)
     vehicle_df.to_csv(os.path.join(file_dir, 'vehicle.csv'), index=False)
 

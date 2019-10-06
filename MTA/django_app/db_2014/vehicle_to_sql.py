@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 '''
-trip_to_sql.py
+vehicle_to_sql.py
 
 module to load gtfs-realtime tabular data to db
 '''
@@ -36,26 +36,24 @@ print(g)
 
 CREATE_STATEMENT = '''
         CREATE TEMPORARY TABLE temp (
+                current_status TEXT,
+                current_stop_sequence INTEGER,
                 header_timestamp INTEGER,
                 updateid INTEGER,
-                trip TEXT,
                 route TEXT,
                 stop TEXT,
-                current_stop TEXT,
-                stop_number INTEGER,
                 start_date INTEGER,
-                arrival FLOAT,
-                departure FLOAT)
+                timestamp INTEGER,
+                trip TEXT)
 '''
 
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
-with open(os.path.join(dname, 'trip.sql')) as f:
+with open(os.path.join(dname, 'vehicle.sql')) as f:
     SQL_STATEMENT = f.read()
 
-cols = ['header_timestamp_id', 'updateid', 'trip_id', 'route_id',
-        'stop_id', 'current_stop_id', 'stop_number', 'start_date_id',
-        'arrival', 'departure']
+cols = ['current_status_id', 'current_stop_sequence', 'header_timestamp_id', 
+    'updateid', 'route_id', 'start_date_id', 'stop_id', 'timestamp', 'trip_id']
 
 cols_dict = OrderedDict()
 for item in cols:
@@ -88,8 +86,8 @@ conn = psycopg2.connect(
     "host={HOST} port={PORT} dbname={NAME} user={USER} password={PASSWORD}".format(**DATABASE))
 try:
     for path in g:
-        csv_path = os.path.join(path, 'trip_update.csv')
-        table = 'mta2014_trip'
+        csv_path = os.path.join(path, 'vehicle.csv')
+        table = 'mta2014_vehicle'
         print(CREATE_STATEMENT)
         print(SQL_STATEMENT.format(', '.join(temp_cols),
             table, ', '.join(cols), **cols_dict))

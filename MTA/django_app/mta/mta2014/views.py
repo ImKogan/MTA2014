@@ -3,19 +3,22 @@ views.py
 
 declare views
 '''
-
+import pandas as pd
 from collections import defaultdict
 from datetime import datetime, time, timedelta
 import json
+from pprint import pprint
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.conf import settings
 from django.views import generic, View
 from django.core.serializers import serialize
+from django.db import connection
 from django.db.models.functions import Lower, Substr
 from django.db.models import F, Q, Max, Min
 import pytz
 from .models import NYCBoroughs, Stops, Shapes, Trip, RouteInfo, Date
+from .decorators import debugger_queries
 
 class BorosListView(generic.ListView):
     '''Render page with NYC boro boundaries
@@ -67,7 +70,7 @@ class MapMTAView(View):
 class RouteStopsView(View):
     '''Return json with arrival and departure times for selected route
     '''
-
+    @debugger_queries
     def get(self, request):
         route = request.GET['route']
         direction = request.GET['direction']
@@ -76,53 +79,93 @@ class RouteStopsView(View):
         print(route, direction, date, hour)
 
         start_stamp, end_stamp = date_to_stmps(date, hour)
-
-        trips = Trip.objects.annotate(
-            d=Lower(Substr('stop__stop_id', 4, 1)),
-            r_route_id=F('route__route_id'),
-            s_stop_id=F('stop__stop_id')).filter(
-                (Q(arrival__lte=end_stamp) | Q(departure__lte=end_stamp)) &
-                (Q(arrival__gte=start_stamp) | Q(departure__gte=start_stamp)),
-                header_timestamp__timestamp__gte=start_stamp-300,
-                header_timestamp__timestamp__lte=end_stamp+300,
-                route__route_id=route,
-                d=direction).order_by('stop__stop_id', 'arrival', 'departure')
-        trips_values = trips.values(
-            'stop_id', 'r_route_id', 's_stop_id', 'arrival', 'departure')
-        print(len(trips_values))
-        stop_ids = list(set([trip['stop_id'] for trip in trips_values]))
-        stops = Stops.objects.filter(pk__in=stop_ids)
-        stops_values = stops.values()
-        print(len(stops))
-
-        if len(trips.values()) == 0:
-            message = "Your query returned 0 results"
-            print(message)
-            return JsonResponse({"message": message})
+        
+        with open('mta2014/stmt.txt') as f:
+            stmt = f.read()
+        print(stmt)
+        with connection.cursor() as cursor:
+            cursor.execute(stmt, [end_stamp, end_stamp,
+                start_stamp, start_stamp,
+                end_stamp+3600, end_stamp+3600,
+                direction, start_stamp-300, end_stamp+3600, route,
+                end_stamp, end_stamp])
+            columns = [col[0] for col in cursor.description]
+            tests = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        print('tests', len(tests))
+        df = pd.DataFrame(tests)
+        df.to_csv('mta2014/test.csv', index=False)
+        
+        tests = [trip for trip in tests if trip['include'] is not False]
+        print('tests', len(tests))
         trips_dict = defaultdict(list)
-        for item in trips_values:
+        for item in tests:
             trips_dict[item['s_stop_id']].append({
                 'route_id': item['r_route_id'],
                 'stop_id': item['s_stop_id'],
+                'stop_name': item['stop_name'],
+                'geom': item['geom'],
                 'arrival': item['arrival'],
                 'departure': item['departure']})
 
         stops_json = []
-        for i in range(len(stops)):
+        for key in trips_dict:
             stops_json.append({
                 "type": "Feature",
                 "properties": {
-                    "route_id": trips_dict[stops_values[i]['stop_id']][0]['route_id'],
-                    "stop_id": stops_values[i]['stop_id'],
-                    "name": stops_values[i]['stop_name'],
+                    "route_id": trips_dict[key][0]['route_id'],
+                    "stop_id": trips_dict[key][0]['stop_id'],
+                    "name": trips_dict[key][0]['stop_name'],
                     "date": date,
-                    "stops_info": trips_dict[stops_values[i]['stop_id']]
+                    "stops_info": trips_dict[key]
                 },
-                "geometry": json.loads(stops[i].geom.geojson)
+                "geometry": json.loads(trips_dict[key][0]['geom'])
             })
 
+
+        #trips = Trip.objects.annotate(
+        #    d=Lower(Substr('stop__stop_id', 4, 1)),
+        #    r_route_id=F('route__route_id'),
+        #    s_stop_id=F('stop__stop_id')).filter(
+        #        (Q(arrival__lte=end_stamp) | Q(departure__lte=end_stamp)) &
+        #        (Q(arrival__gte=start_stamp) | Q(departure__gte=start_stamp)),
+        #        header_timestamp__timestamp__gte=start_stamp-300,
+        #        header_timestamp__timestamp__lte=end_stamp+360,
+        #        route__route_id=route,
+        #        d=direction).order_by('stop__stop_id', 'arrival', 'departure').select_related('stop')
+        #trips_values = trips.values(
+        #    'stop_id', 'r_route_id', 's_stop_id', 'arrival', 'departure')        
+        #print('trips_values', len(trips_values))
+        #stop_ids = list(set([trip['stop_id'] for trip in trips_values]))
+        #stops = Stops.objects.filter(pk__in=stop_ids)
+        #stops_values = list(stops.values())
+        #print('stops', len(stops))
+
+        #if len(trips.values()) == 0:
+        #    message = "Your query returned 0 results"
+        #    print(message)
+        #    return JsonResponse({"message": message})
+        #trips_dict = defaultdict(list)
+        #for item in trips_values:
+        #    trips_dict[item['s_stop_id']].append({
+        #        'route_id': item['r_route_id'],
+        #        'stop_id': item['s_stop_id'],
+        #        'arrival': item['arrival'],
+        #        'departure': item['departure']})
+        #stops_json = []
+        #for i in range(len(stops)):
+        #    stops_json.append({
+        #        "type": "Feature",
+        #        "properties": {
+        #            "route_id": trips_dict[stops_values[i]['stop_id']][0]['route_id'],
+        #            "stop_id": stops_values[i]['stop_id'],
+        #            "name": stops_values[i]['stop_name'],
+        #            "date": date,
+        #            "stops_info": trips_dict[stops_values[i]['stop_id']]
+        #        },
+        #        "geometry": json.loads(stops[i].geom.geojson)
+        #    })
+
         shapes = Shapes.objects.filter(route_name=route)
-        print(len(shapes))
         shapes_json = json.loads(serialize(
             'geojson', shapes, geometry_field='geom',
             fields=('shape_id', 'route_name')))
@@ -133,7 +176,7 @@ class RouteStopsView(View):
 class StopTimesView(View):
     '''Return json with arrival and departure times for selected stop
     '''
-
+    @debugger_queries
     def get(self, request):
         stop = request.GET['stop']
         date = request.GET['date']
@@ -152,10 +195,10 @@ class StopTimesView(View):
                 (Q(arrival__lte=end_stamp) | Q(departure__lte=end_stamp)) &
                 (Q(arrival__gte=start_stamp) | Q(departure__gte=start_stamp)),
                 header_timestamp__timestamp__gte=start_stamp-300,
-                header_timestamp__timestamp__lte=end_stamp+300).order_by(
+                header_timestamp__timestamp__lte=end_stamp+360).order_by(
                     'arrival', 'departure')
 
-        if len(trips.values()) == 0:
+        if len(trips) == 0:
             message = "Your query returned 0 results"
             print(message)
             return JsonResponse({"message": message})
