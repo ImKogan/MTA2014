@@ -3,13 +3,15 @@ views.py
 
 declare views
 '''
+from collections import namedtuple
 import pandas as pd
 from collections import defaultdict
 from datetime import datetime, time, timedelta
 import json
+from wsgiref.util import FileWrapper
 from pprint import pprint
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.conf import settings
 from django.views import generic, View
 from django.core.serializers import serialize
@@ -83,6 +85,13 @@ class RouteStopsView(View):
         with open('mta2014/stmt.txt') as f:
             stmt = f.read()
         print(stmt)
+        with open('mta2014/test.txt', 'w') as f:
+            f.write(stmt % (end_stamp, end_stamp,
+                    start_stamp, start_stamp,
+                    end_stamp+3600, end_stamp+3600,
+                    direction, start_stamp-300, end_stamp+3600, route,
+                    end_stamp, end_stamp))
+
         with connection.cursor() as cursor:
             cursor.execute(stmt, [end_stamp, end_stamp,
                 start_stamp, start_stamp,
@@ -120,50 +129,6 @@ class RouteStopsView(View):
                 },
                 "geometry": json.loads(trips_dict[key][0]['geom'])
             })
-
-
-        #trips = Trip.objects.annotate(
-        #    d=Lower(Substr('stop__stop_id', 4, 1)),
-        #    r_route_id=F('route__route_id'),
-        #    s_stop_id=F('stop__stop_id')).filter(
-        #        (Q(arrival__lte=end_stamp) | Q(departure__lte=end_stamp)) &
-        #        (Q(arrival__gte=start_stamp) | Q(departure__gte=start_stamp)),
-        #        header_timestamp__timestamp__gte=start_stamp-300,
-        #        header_timestamp__timestamp__lte=end_stamp+360,
-        #        route__route_id=route,
-        #        d=direction).order_by('stop__stop_id', 'arrival', 'departure').select_related('stop')
-        #trips_values = trips.values(
-        #    'stop_id', 'r_route_id', 's_stop_id', 'arrival', 'departure')        
-        #print('trips_values', len(trips_values))
-        #stop_ids = list(set([trip['stop_id'] for trip in trips_values]))
-        #stops = Stops.objects.filter(pk__in=stop_ids)
-        #stops_values = list(stops.values())
-        #print('stops', len(stops))
-
-        #if len(trips.values()) == 0:
-        #    message = "Your query returned 0 results"
-        #    print(message)
-        #    return JsonResponse({"message": message})
-        #trips_dict = defaultdict(list)
-        #for item in trips_values:
-        #    trips_dict[item['s_stop_id']].append({
-        #        'route_id': item['r_route_id'],
-        #        'stop_id': item['s_stop_id'],
-        #        'arrival': item['arrival'],
-        #        'departure': item['departure']})
-        #stops_json = []
-        #for i in range(len(stops)):
-        #    stops_json.append({
-        #        "type": "Feature",
-        #        "properties": {
-        #            "route_id": trips_dict[stops_values[i]['stop_id']][0]['route_id'],
-        #            "stop_id": stops_values[i]['stop_id'],
-        #            "name": stops_values[i]['stop_name'],
-        #            "date": date,
-        #            "stops_info": trips_dict[stops_values[i]['stop_id']]
-        #        },
-        #        "geometry": json.loads(stops[i].geom.geojson)
-        #    })
 
         shapes = Shapes.objects.filter(route_name=route)
         shapes_json = json.loads(serialize(
@@ -214,6 +179,60 @@ class StopTimesView(View):
             [{'route_id':d['r_id'], 'stop_id':d['s_id'], 'arrival':d['arrival'],
               'departure':d['departure']} for d in list(trips_values)]
         return JsonResponse({"stops_json": stops_json})
+
+class Query(View):
+    def __init__(self):
+        self.template_name = 'mta2014/query_mta.html'
+
+    def get(self, request):
+        dates = Date.objects.aggregate(Min('date'), Max('date'))
+        routes = RouteInfo.objects.exclude(trip__isnull=True)
+        route_names = [route['route_short_name'] for route in routes.values()]
+        print(route_names)
+        context = {'dates': dates, 'route_names': route_names}
+        return render(request, self.template_name, context)
+
+class QueryTrips(View):
+    def get(self, request):
+        route = request.GET['route']
+        direction = request.GET['direction']
+        date = request.GET['date']
+        hour = request.GET['hour']
+        print(route, direction, date, hour)
+
+        start_stamp, end_stamp = date_to_stmps(date, hour)
+        
+        with open('mta2014/stmt1.txt') as f:
+            stmt = f.read()
+        #print(stmt)
+
+        with open('mta2014/test1.txt', 'w') as f:
+            f.write(stmt % (end_stamp, end_stamp,
+                    start_stamp, start_stamp,
+                    end_stamp+3600, end_stamp+3600,
+                    direction, start_stamp-300, end_stamp+3600, route,
+                    end_stamp, end_stamp))
+
+        with connection.cursor() as cursor:
+            cursor.execute(stmt, [end_stamp, end_stamp,
+                start_stamp, start_stamp,
+                end_stamp+3600, end_stamp+3600,
+                direction, start_stamp-300, end_stamp+3600, route,
+                end_stamp, end_stamp])
+            columns = [col[0] for col in cursor.description]
+            result = namedtuple('Result',  columns)
+            tests = [result(*row) for row in cursor.fetchall()]
+        print('tests', len(tests))
+        df = pd.DataFrame.from_records(tests, columns=result._fields)
+        df.to_csv('mta2014/test.csv', index=False)
+        
+        print('tests', len(tests))
+        
+        wrapper = FileWrapper(open('mta2014/test.csv'))
+        response = HttpResponse(wrapper, content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="trip.csv"'
+        return response
+        #return JsonResponse({})
 
 def date_to_stmps(date, hour):
     '''return timestamp int for (date,hour)
