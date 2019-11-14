@@ -12,3 +12,12 @@ def db_connection(settings):
                 'PASSWORD': config.get('database', 'DATABASE_PASSWORD'),
                }
     return DATABASE
+
+if __name__ == '__main__':
+    import sys
+    import os
+    settings = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'settings.ini')
+    conn = db_connection(settings)
+    print(conn['NAME'])
+    sys.exit(0)
