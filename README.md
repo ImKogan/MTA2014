@@ -14,8 +14,8 @@ up for Mapbox, and getting an API key.
 * Install [Vagrant and Virtualbox](https://www.vagrantup.com/intro/getting-started/) (`sudo apt-get install virtualbox` `sudo apt-get install vagrant`)
 * After cloning the repo, cd into  
 `MTA2014/MTA/django_app/mta`  
-and copy `settings.ini.tmpl` to `settings.ini`  
-`cp settings.ini.tmpl settings.ini`  
+and copy `temp_setting.ini` to `settings.ini`  
+`cp temp_setting.ini settings.ini`  
 edit the new `settings.ini` file by updating the ACCESS_KEY value.
 ```
 [database]
