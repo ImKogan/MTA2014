@@ -10,7 +10,7 @@ import argparse
 from configparser import RawConfigParser
 import psycopg2
 
-from db_conn import db_connection
+from . import db_conn
 
 def run(args):
     '''run upload to db
@@ -20,7 +20,7 @@ def run(args):
     with open(sql) as f:
         SQL = f.read()
     settings = os.path.join(BASE, args['settings'])
-    DATABASE = db_connection(settings)
+    DATABASE = db_conn.db_connection(settings)
     conn = psycopg2.connect(
         "host={HOST} port={PORT} dbname={NAME} user={USER} password={PASSWORD}".format(**DATABASE))
     cur = conn.cursor()

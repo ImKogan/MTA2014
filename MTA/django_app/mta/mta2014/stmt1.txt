@@ -1,0 +1,73 @@
+SELECT header_timestamp, start_date, trip_name, d AS direction,
+    r_route_id AS route_id, s_stop_id AS stop_id, stop_name,
+    curr_stop_id, curr_stop_name, stop_number, arrival, departure,
+    current_stop_sequence, status, timestamp
+FROM (
+SELECT *,
+((("s"."timestamp" < "s"."max_timestamp")
+OR (("s"."timestamp" >= "s"."header_timestamp" - 300)
+AND ("s"."header_timestamp" = "s"."max_header_timestamp")))
+AND ("s"."arrival" <= %s OR "s"."departure" <= %s)) include
+FROM (
+SELECT 
+	"mta2014_timestamp"."timestamp" as header_timestamp,
+	"mta2014_date"."date" as start_date,
+	"mta2014_tripname"."trip_name" as trip_name,
+	LOWER(SUBSTRING("mta2014_stops"."stop_id", 4, 1)) AS "d",
+	"mta2014_routeinfo"."route_id" AS "r_route_id",
+	"mta2014_stops"."stop_id" AS "s_stop_id",
+	"mta2014_stops"."stop_code",
+	"mta2014_stops"."stop_name",
+	"mta2014_stops"."stop_desc",
+	"cur_stops"."stop_id" AS curr_stop_id,
+	"cur_stops"."stop_code" AS curr_stop_code,
+	"cur_stops"."stop_name" AS curr_stop_name,
+	"cur_stops"."stop_desc" AS curr_stop_desc,
+	"mta2014_trip"."stop_number",
+	"mta2014_trip"."arrival" as arrival,
+	"mta2014_trip"."departure" as departure,
+	"mta2014_vehicle"."current_stop_sequence",
+	"mta2014_status"."status",
+	"mta2014_vehicle"."timestamp",
+	MAX("mta2014_vehicle"."timestamp") OVER (
+		PARTITION BY "mta2014_trip"."trip_id"
+	) as max_timestamp,
+	MAX("mta2014_timestamp"."timestamp") OVER (
+		PARTITION BY "mta2014_trip"."trip_id"
+	) as max_header_timestamp,
+	MAX("mta2014_trip"."arrival") OVER (
+		PARTITION BY "mta2014_trip"."trip_id"
+	) as last_arrival,
+	ST_X("mta2014_stops"."geom") as LONG,
+	ST_Y("mta2014_stops"."geom") as LAT,
+	ST_AsGeoJSON("mta2014_stops"."geom") as geom
+FROM "mta2014_trip"
+INNER JOIN "mta2014_timestamp"
+ON ("mta2014_trip"."header_timestamp_id" = "mta2014_timestamp"."id")
+INNER JOIN "mta2014_date"
+ON ("mta2014_trip"."start_date_id" = "mta2014_date"."id")
+INNER JOIN "mta2014_tripname"
+ON ("mta2014_trip"."trip_id" = "mta2014_tripname"."id")
+INNER JOIN "mta2014_routeinfo"
+ON ("mta2014_trip"."route_id" = "mta2014_routeinfo"."id")
+INNER JOIN "mta2014_stops"
+ON ("mta2014_trip"."stop_id" = "mta2014_stops"."id")
+INNER JOIN "mta2014_stops" AS cur_stops
+ON ("mta2014_trip"."current_stop_id" = "cur_stops"."id")
+LEFT OUTER JOIN "mta2014_vehicle"
+ON ("mta2014_vehicle"."trip_id" = "mta2014_trip"."trip_id")
+AND ("mta2014_vehicle"."header_timestamp_id" = "mta2014_trip"."header_timestamp_id")
+AND ("mta2014_vehicle"."stop_id" ="mta2014_trip"."current_stop_id")
+LEFT OUTER JOIN "mta2014_status"
+ON ("mta2014_vehicle"."current_status_id" = "mta2014_status"."id")
+WHERE (("mta2014_trip"."arrival" >= %s OR "mta2014_trip"."departure" >= %s)
+AND ("mta2014_trip"."arrival" <= %s OR "mta2014_trip"."departure" <= %s)
+AND LOWER(SUBSTRING("mta2014_stops"."stop_id", 4, 1)) = %s
+AND "mta2014_timestamp"."timestamp" >= %s
+AND "mta2014_timestamp"."timestamp" <= %s
+AND "mta2014_routeinfo"."route_id" = %s)
+ORDER BY "mta2014_stops"."stop_id" ASC,
+"mta2014_trip"."arrival" ASC,
+"mta2014_trip"."departure" ASC ) as s
+WHERE "s"."arrival" <= %s OR "s"."departure" <= %s ) trip
+WHERE trip.include IS TRUE
