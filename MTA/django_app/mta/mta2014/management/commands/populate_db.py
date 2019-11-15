@@ -21,6 +21,7 @@ class Command(BaseCommand):
         module = kwargs['module']
         if module == 'routes_to_sql':
             from ... import routes_to_sql
+            kwargs['settings'] = kwargs['s']
             routes_to_sql.run(kwargs)
         if module == 'load_boros':
             from ... import load_boros
@@ -33,6 +34,7 @@ class Command(BaseCommand):
             load_shapes.run(kwargs)
         if module == 'status_to_sql':
             from ... import status_to_sql
+            kwargs['settings'] = kwargs['s']
             status_to_sql.run(kwargs)
         print('Database updated succesfully'.center(50, '-'))
 
