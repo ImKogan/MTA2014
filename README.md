@@ -31,11 +31,11 @@ At this point there are two ways to configure the app:
 ##### Directly on your machine:
 * cd into setup directory
 `MTA2014/MTA/setup`  
-open `local-setup.sh`
-lines 4-9 install postgresql-client and a few other dependencies needed to use postgis
-If you already have these libraries, do not uncomment the lines. 
+open `local-setup.sh` \
+Lines 4-9 install postgresql-client and a few other dependencies needed to use postgis. \
+If you already have these libraries, do not uncomment the lines. \
 While these packages are those installed on my machine (Ubuntu 18.04) I haven't tested this in general.
-* Having either uncommented (to install upo running now, or relying on preinstalled packages), check line 19 in this file. If running a demo, it is advised to change the 100 to a smaller number (such as 5). This argument is the number of days of data to be downloaded. if left at a 100 - the complete process will take at least a half hour (on any reasonable personal machine).
+* Having either uncommented (to install upon running now, or relying on preinstalled packages), check line 19 in this file. If running a demo, it is advised to change the 100 to a smaller number (such as 5). This argument is the number of days of data to be downloaded. If left at a 100 - the complete process will take at least a half hour (on any reasonable personal machine).
 * Configure your postgres DATABASE. MAKE SURE THE REDENTIALS MATCH THE settings.ini FILE ABOVE.
 * Don't forget to create a postgis extension
 `CREATE EXTENSION postgis;`
@@ -44,7 +44,8 @@ While these packages are those installed on my machine (Ubuntu 18.04) I haven't 
 `. local-setup.sh`
 * in `MTA2014/MTA/django_app/mta` run:
 ` ./manage.py runserver`
-* Remember to use chrome! Currently the 'Map' and 'Query' tabs are confifured.
+* In the browser: `http://127.0.0.1:8000/mta2014/map_mta` \
+Remember to use chrome! Currently the 'Map' and 'Query' tabs are confifured.
 
 ##### On a VirtualBox using Vagrant:
 * Install [Vagrant and Virtualbox](https://www.vagrantup.com/intro/getting-started/) (`sudo apt-get install virtualbox` `sudo apt-get install vagrant`)
