@@ -1,0 +1,55 @@
+{% extends "mta2014/base.html" %}
+
+{% block content %}
+	<script type="text/javascript">
+		var dates = {{dates|safe}};
+		var route_names = {{route_names|safe}};
+	</script>
+	<div class="app-container row">
+		<div id="includedContent"></div>
+  <div class="row">
+    <p class="col s12">Use this form to query the DataBase for Trip updates</p>
+    <div class="col s3">
+      <div class="row">
+        <div class="input-field col s12">
+			<select id="select-route">
+			</select>
+		</div>
+	  </div>
+      <div class="row">
+        <div class="input-field col s12">
+            <i class="material-icons valign">today</i>
+            <input type="text" placeholder="Date" class="datepicker" id="route-datepicker" text="Hour">
+        </div>
+        </div>
+      <div class="row">
+        <div class="input-field col s12">
+		    <select id="select-hour">
+			</select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+			<select id="select-direction">
+				<option value="" disabled selected>Route Direction</option>
+				<option value="n"><a href="#!">North</a></option>
+				<option value="s"><a href="#!">South</a></option>
+		    </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+			<button class="btn waves-effect waves-light" id="submit-trip-query" type="submit" name"action">Submit<i class="material-icons right">send</i>
+			</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div id="datepicker1-parent">
+    </div>
+		<div id="error-message-modal" class="modal">
+				<div class="modal-content">
+				</div>
+		</div>
+  	</div>
+{% endblock %}
