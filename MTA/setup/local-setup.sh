@@ -2,10 +2,11 @@
 
 # linux-env setup
 #sudo apt-get update
-#sudo apt-get -y -q install unzip protobuf-compiler \
+#sudo apt-get -y -q install \
 #	binutils libproj-dev gdal-bin \
 #	postgresql-client \
 #	python3-pip
+sudo apt-get -y -q install unzip protobuf-compiler
 
 ## setup python requirements
 pip3 install -r ../requirements.txt
