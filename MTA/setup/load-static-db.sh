@@ -2,7 +2,9 @@
 # load-static-db.sh -- load static data to db
 
 cd "$(dirname "$0")"
-pushd ../django_app/mta
+pushd ../data/static/gtfs_static
+echo -e 'status\nINCOMING_AT\nSTOPPED_AT\nIN_TRANSIT_TO' > status.txt
+pushd ../../../django_app/mta
 pwd
 
 ./manage.py populate_db ../../data/static/gtfs_static/status.txt status_to_sql
