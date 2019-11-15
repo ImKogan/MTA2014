@@ -13,6 +13,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('path', help = "path to file passed int load module")
         parser.add_argument('module', help="module to run")
+        parser.add_argument('--settings', default='settings.ini', help="name of settings .ini file")
 
     def handle(self, *args, **kwargs):
         print(args)
