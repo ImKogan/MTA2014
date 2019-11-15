@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # linux-env setup
-#sudo apt-get update
-#sudo apt-get -y -q install \
-#	binutils libproj-dev gdal-bin \
-#	postgresql-client \
-#	python3-pip
+#sudo apt-get update && apt-get install -y --no-install-recommends apt-utils \
+#    binutils \
+#    libgdal-dev \
+#    python3-gdal
+#	 postgresql-client \
+#	 python3-pip
 sudo apt-get -y -q install unzip protobuf-compiler
 
 ## setup python requirements
