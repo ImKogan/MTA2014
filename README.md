@@ -1,5 +1,6 @@
 # MTA2014
 
+
 MTA2014 is a django app which provides a web interface for looking up
 historical MTA Subway train data.
 
@@ -11,7 +12,6 @@ up for Mapbox, and getting an API key.
 
 * [Mapbox](https://mapbox.com)
 * [Create](https://docs.mapbox.com/help/how-mapbox-works/access-tokens/#creating-and-managing-access-tokens) a Mapbox API key.
-* Install [Vagrant and Virtualbox](https://www.vagrantup.com/intro/getting-started/) (`sudo apt-get install virtualbox` `sudo apt-get install vagrant`)
 * After cloning the repo, cd into  
 `MTA2014/MTA/django_app/mta`  
 and copy `temp_setting.ini` to `settings.ini`  
@@ -27,6 +27,27 @@ ACCESS_KEY: <MAPBOX API KEY>
 ```
 and update you local database credentials from defaults if desired.
 
+At this point there are two ways to configure the app:
+##### Directly on your machine:
+* cd into setup directory
+`MTA2014/MTA/setup`  
+open `local-setup.sh`
+lines 4-9 install postgresql-client and a few other dependencies needed to use postgis
+If you already have these libraries, do not uncomment the lines. 
+While these packages are those installed on my machine (Ubuntu 18.04) I haven't tested this in general.
+* Having either uncommented (to install upo running now, or relying on preinstalled packages), check line 19 in this file. If running a demo, it is advised to change the 100 to a smaller number (such as 5). This argument is the number of days of data to be downloaded. if left at a 100 - the complete process will take at least a half hour (on any reasonable personal machine).
+* Configure your postgres DATABASE. MAKE SURE THE REDENTIALS MATCH THE settings.ini FILE ABOVE.
+* Don't forget to create a postgis extension
+`CREATE EXTENSION postgis;`
+(Unless you have created a superuser for this db - you will need to access the db as a superuser to create an extension)
+* Finally, run
+`. local-setup.sh`
+* in `MTA2014/MTA/django_app/mta` run:
+` ./manage.py runserver`
+* Remember to use chrome! Currently the 'Map' and 'Query' tabs are confifured.
+
+##### On a VirtualBox using Vagrant:
+* Install [Vagrant and Virtualbox](https://www.vagrantup.com/intro/getting-started/) (`sudo apt-get install virtualbox` `sudo apt-get install vagrant`)
 * cd into the repo root folder MTA2014/ and run `vagrant up`.
 * This will create a new virtualbox and install all the necessary dependencies
 on it. The project's data will be downloaded and the database configured.
