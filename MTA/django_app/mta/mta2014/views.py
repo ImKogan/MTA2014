@@ -104,7 +104,7 @@ class RouteStopsView(View):
         df = pd.DataFrame(tests)
         df.to_csv('mta2014/test.csv', index=False)
         
-        tests = [trip for trip in tests if trip['include'] is not False]
+        tests = [trip for trip in tests if trip['toinclude'] is not False]
         print('tests', len(tests))
         trips_dict = defaultdict(list)
         for item in tests:

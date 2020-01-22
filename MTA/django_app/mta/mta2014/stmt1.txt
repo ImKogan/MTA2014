@@ -7,7 +7,7 @@ SELECT *,
 ((("s"."timestamp" < "s"."max_timestamp")
 OR (("s"."timestamp" >= "s"."header_timestamp" - 300)
 AND ("s"."header_timestamp" = "s"."max_header_timestamp")))
-AND ("s"."arrival" <= %s OR "s"."departure" <= %s)) include
+AND ("s"."arrival" <= %s OR "s"."departure" <= %s)) toinclude
 FROM (
 SELECT 
 	"mta2014_timestamp"."timestamp" as header_timestamp,
@@ -70,4 +70,4 @@ ORDER BY "mta2014_stops"."stop_id" ASC,
 "mta2014_trip"."arrival" ASC,
 "mta2014_trip"."departure" ASC ) as s
 WHERE "s"."arrival" <= %s OR "s"."departure" <= %s ) trip
-WHERE trip.include IS TRUE
+WHERE trip.toinclude IS TRUE
