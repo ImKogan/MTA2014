@@ -20,10 +20,10 @@
 		height: 200px;
 }
 #stop-data  td {
-		font-size: 0.6em;
+		font-size: 0.9em;
 }
 .fixed  th {
-		font-size: 0.7em;
+		font-size: 1em;
 }
 .collection-item {
 		top: 100px;
@@ -37,10 +37,12 @@
 		color: blue;
 		padding-top: 8px;
 		padding-bottom: 8px;
+		font-size: 1em;
 }
 .stop-info {
 		padding-top: 8px;
 		padding-bottom: 8px;
+		font-size: 0.9em;
 }
 .leaflet-popup-content::before {
 		margin-top: 5px;
