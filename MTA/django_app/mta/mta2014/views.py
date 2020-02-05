@@ -78,13 +78,11 @@ class RouteStopsView(View):
         direction = request.GET['direction']
         date = request.GET['date']
         hour = request.GET['hour']
-        print(route, direction, date, hour)
 
         start_stamp, end_stamp = date_to_stmps(date, hour)
         
         with open('mta2014/stmt.txt') as f:
             stmt = f.read()
-        print(stmt)
         with open('mta2014/test.txt', 'w') as f:
             f.write(stmt % (end_stamp, end_stamp,
                     start_stamp, start_stamp,
@@ -100,12 +98,8 @@ class RouteStopsView(View):
                 end_stamp, end_stamp])
             columns = [col[0] for col in cursor.description]
             tests = [dict(zip(columns, row)) for row in cursor.fetchall()]
-        print('tests', len(tests))
-        df = pd.DataFrame(tests)
-        df.to_csv('mta2014/test.csv', index=False)
         
         tests = [trip for trip in tests if trip['toinclude'] is not False]
-        print('tests', len(tests))
         trips_dict = defaultdict(list)
         for item in tests:
             trips_dict[item['s_stop_id']].append({
@@ -146,7 +140,6 @@ class StopTimesView(View):
         stop = request.GET['stop']
         date = request.GET['date']
         hour = request.GET['hour']
-        print(stop, date, hour)
 
         start_stamp, end_stamp = date_to_stmps(date, hour)
         stop_id = stop.split(":")[-1].strip()
@@ -165,7 +158,6 @@ class StopTimesView(View):
 
         if len(trips) == 0:
             message = "Your query returned 0 results"
-            print(message)
             return JsonResponse({"message": message})
 
         stops = Stops.objects.filter(stop_id=stop_id)
@@ -188,7 +180,6 @@ class Query(View):
         dates = Date.objects.aggregate(Min('date'), Max('date'))
         routes = RouteInfo.objects.exclude(trip__isnull=True)
         route_names = [route['route_short_name'] for route in routes.values()]
-        print(route_names)
         context = {'dates': dates, 'route_names': route_names}
         return render(request, self.template_name, context)
 
@@ -198,13 +189,11 @@ class QueryTrips(View):
         direction = request.GET['direction']
         date = request.GET['date']
         hour = request.GET['hour']
-        print(route, direction, date, hour)
 
         start_stamp, end_stamp = date_to_stmps(date, hour)
         
         with open('mta2014/stmt1.txt') as f:
             stmt = f.read()
-        #print(stmt)
 
         with open('mta2014/test1.txt', 'w') as f:
             f.write(stmt % (end_stamp, end_stamp,
@@ -222,11 +211,8 @@ class QueryTrips(View):
             columns = [col[0] for col in cursor.description]
             result = namedtuple('Result',  columns)
             tests = [result(*row) for row in cursor.fetchall()]
-        print('tests', len(tests))
         df = pd.DataFrame.from_records(tests, columns=result._fields)
         df.to_csv('mta2014/test.csv', index=False)
-        
-        print('tests', len(tests))
         
         wrapper = FileWrapper(open('mta2014/test.csv'))
         response = HttpResponse(wrapper, content_type='text/csv')
