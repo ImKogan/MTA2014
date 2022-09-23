@@ -1,6 +1,6 @@
 requests
 Django>=2.1.11
-protobuf==3.7.0
+protobuf==3.18.3
 pandas==0.24.1
 psycopg2==2.7.7
 pytz==2018.9
